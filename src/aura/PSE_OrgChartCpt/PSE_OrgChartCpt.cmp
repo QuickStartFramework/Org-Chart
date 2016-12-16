@@ -1,0 +1,207 @@
+<aura:component implements="force:appHostable" controller="PSE_OrgChartCptCtl" access="global">
+    <ltng:require styles="/resource/PSE_SLDS0102/assets/styles/salesforce-lightning-design-system-scoped.min.css" />
+    <aura:attribute name="currentUser" type="Object"/>
+    <aura:attribute name="search" type="boolean"/>
+    <aura:attribute name="flat" type="boolean"/>
+    <aura:attribute name="displayLoader" type="boolean"/>
+    <aura:attribute name="prevSibling" type="Object"/>
+    <aura:attribute name="nextSibling" type="Object"/>
+    <aura:attribute name="listManagers" type="Object[]"/>
+    <aura:attribute name="listReports" type="Object[]"/>
+    <aura:attribute name="circleReports" type="Object[]"/>
+    <aura:attribute name="searchResults" type="Object[]"/>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- PAGE HEADER -->
+    <div class="slds">
+        <div class="slds-page-header" role="banner">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <c:PSE_svg class="slds-icon slds-icon--large slds-icon-standard-user" xlinkHref="/resource/PSE_SLDS0102/assets/icons/standard-sprite/svg/symbols.svg#user"/>
+                        </div>
+                        <div class="slds-media__body">
+                            <p class="slds-text-heading--label">Quick Start Framework</p>
+                            <div class="slds-grid">
+                                <h1 class="slds-text-heading--medium slds-m-right--small slds-truncate slds-align-middle" title="Record Title">Org Chart</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SEARCH SECTION -->
+    <div class="slds">
+        <aura:renderIf isTrue="{!v.search}">
+            <div id="search">
+                <a class="backBtn" onclick="{!c.toggleSearch}">
+                    <c:PSE_svg class="fillblack slds-icon slds-icon--medium slds-icon-utility-up" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#up"/>
+                </a>
+                <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                            <c:PSE_svg class="slds-input__icon" xlinkHref="/resource/SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#search"/>
+                            <!-- <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" onkeyup="{!c.doSearch}"/> -->
+                            <ui:inputText aura:id="txtSearch" class="slds-input" placeholder="Search" value="" keyup="{!c.doSearch}" updateOn="keyup"/>
+                        </div>
+                    </div>
+                    <!-- Search Results -->
+                    <aura:renderIf isTrue="{!v.searchResults.length>0}">
+                        <ul class="slds-list--vertical slds-has-dividers">
+                            <aura:iteration items="{!v.searchResults}" var="report">
+                                <li class="slds-list__item">
+                                    <div class="slds-media slds-tile">
+                                        <div class="slds-media__figure">
+                                            <span class="slds-avatar slds-avatar--small slds-avatar--circle">
+                                                <img  data-id="{!report.Id}" onclick="{!c.selectNode}"  src="{!report.SmallPhotoUrl}" alt="company name" />
+                                            </span>
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <p class="slds-tile__title slds-truncate slds-text-body--medium"><a href="#">{!report.Name}</a></p>
+                                            <ul class="slds-tile__detail slds-list--vertical slds-text-body--small">
+                                                <p class="slds-truncate slds-list__item">{!report.Title}</p>
+                                                <aura:if isTrue="{!report.Email!=null}">
+                                                    <p class="slds-truncate slds-list__item"><c:PSE_svg class="fillblack slds-icon slds-icon--x-small slds-icon-utility-email" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#email"/>&nbsp; <a href="{!'mailto:' + report.Email}">{!report.Email}</a></p>
+                                                </aura:if>
+                                                <aura:if isTrue="{!report.Phone!=null}">
+                                                    <p class="slds-truncate slds-list__item"><c:PSE_svg class="fillblack slds-icon slds-icon--x-small slds-icon-utility-call" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#call"/>&nbsp; <a href="{!'tel:' + report.Phone}">{!report.Phone}</a></p>
+                                                </aura:if>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </aura:renderIf>
+                </div>
+            </div>
+        </aura:renderIf>
+    </div>
+    <!-- MANAGERS SECTION -->
+    <aura:renderIf isTrue="{!and(v.flat == false,v.search == false)}">
+        <div id="scrolling-top">
+            <div class="top">
+                <div class="top-container" id="top-container">
+                    <aura:iteration items="{!v.listManagers}" var="mgr">
+                        <div class="orgchart-manager">
+                            <div class="orgchart-badge medium" data-id="{!mgr.Id}" onclick="{!c.selectNode}"  style="{!'background-image: url('+mgr.SmallPhotoUrl+')'}"></div>
+                            <div class="orgchart-name slds"><p class="slds slds-text-heading--small">{!mgr.Name}</p>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </div>
+    </aura:renderIf>
+    <!-- SELECTED USER -->
+    <aura:renderIf isTrue="{!v.search == false}">
+        <div class="middle-container">
+            <a href="javascript:void(0);" onclick="{!c.navigateToSelectedUser}">
+                <div class="orgchart-badge big" style="{!'background-image: url('+v.currentUser.SmallPhotoUrl+')'}"></div>
+                <div class="orgchart-name slds">
+                    <p class="slds slds-text-heading--medium">{!v.currentUser.Name}</p>
+                </div>
+                <div class="orgchart-userinfo">{!v.currentUser.Title}&nbsp;</div>
+            </a>
+            <div class="orgchart-highlight">
+                <div id="emailContact" class="slds">
+                    <aura:if isTrue="{!v.currentUser.Email!=null}">
+                        <a href="{!'mailto:' + v.currentUser.Email}"><c:PSE_svg class="fillblack slds-icon slds-icon--x-medium slds-icon-utility-email" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#email"/></a>
+                    </aura:if>
+                </div>
+                <div onclick="{!c.prevSibling}" id="leftArrow" class="slds">
+                    <aura:if isTrue="{!v.prevSibling!=null}">
+                        <c:PSE_svg class="fillblack slds-icon slds-icon--medium slds-icon-utility-chevronleft" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#chevronleft"/>
+                    </aura:if>
+                </div>
+
+                <div id="phoneContact" class="slds">
+                    <aura:if isTrue="{!v.currentUser.Phone!=null}">
+                        <a href="{!'tel:' + v.currentUser.Phone}"><c:PSE_svg class="fillblack slds-icon slds-icon--x-medium slds-icon-utility-call" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#call"/></a>
+                    </aura:if>
+                </div>
+
+                <div onclick="{!c.nextSibling}" id="rightArrow" class="slds">
+                    <aura:renderIf isTrue="{!v.nextSibling!=null}">
+                        <c:PSE_svg class="fillblack slds-icon slds-icon--medium slds-icon-utility-chevronright" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#chevronright"/>
+                    </aura:renderIf>
+                </div>
+            </div>
+        </div>
+    </aura:renderIf>
+    <!-- SEMI CIRCLE REPORTS -->
+    <aura:renderIf isTrue="{!and(and(v.flat == false,v.listReports.length>0), v.search == false)}">
+        <div class="bottom-container">
+            <div class="listCircleReports">
+                <aura:iteration items="{!v.circleReports}" var="report">
+                    <div class="orgchart-subordinate" style="{!'left:'+report.left+'px;'+'top:'+report.top+'px'}">
+                        <div data-id="{!report.user.Id}" onclick="{!c.selectNode}" class="orgchart-badge small" style="{!'background-image: url('+report.user.SmallPhotoUrl+')'}"></div>
+                    </div>
+                </aura:iteration>
+            </div>
+        </div>
+    </aura:renderIf>
+    <!-- ACTION ICONS SEARCH / TOGGLE FLAT -->
+    <aura:renderIf isTrue="{!and(v.flat == false, v.search == false)}">
+        <div class="actionIcons">
+            <aura:renderIf isTrue="{!v.listReports.length>0}">
+                <div id="openFlatList" onclick="{!c.toggleFlatList}">
+                    <a class="slds">
+                        <c:PSE_svg class="fillblack slds-icon slds-icon--medium slds-icon-utility-list" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#list"/>
+                    </a>
+                </div>
+            </aura:renderIf>
+            <div id="openSearch" onclick="{!c.toggleSearch}">
+                <a class="slds">
+                    <c:PSE_svg class="fillblack slds-icon slds-icon--medium slds-icon-utility-search" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#search"/>
+                </a>
+            </div>
+        </div>
+    </aura:renderIf>
+    <!-- FLAT LIST OF REPORTS -->
+    <div class="slds">
+        <aura:renderIf isTrue="{!and(v.flat,v.listReports.length>0)}">
+            <div id="flatreports" class="slds-scrollable--y" >
+                <a class="backBtn" onclick="{!c.toggleFlatList}">
+                    <c:PSE_svg class="fillblack slds-icon slds-icon--medium slds-icon-utility-up" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#up"/>
+                </a>
+                <ul class="slds-list--vertical slds-has-dividers">
+                    <aura:iteration items="{!v.listReports}" var="report">
+                        <li class="slds-list__item">
+                            <div class="slds-media slds-tile">
+                                <div class="slds-media__figure">
+                                    <span class="slds-avatar slds-avatar--small slds-avatar--circle">
+                                        <img  data-id="{!report.Id}" onclick="{!c.selectNode}"  src="{!report.SmallPhotoUrl}" alt="company name" />
+                                    </span>
+                                </div>
+                                <div class="slds-media__body">
+                                    <p class="slds-tile__title slds-truncate slds-text-body--medium"><a href="#">{!report.Name}</a></p>
+                                    <ul class="slds-tile__detail slds-list--vertical slds-text-body--small">
+                                        <p class="slds-truncate slds-list__item">{!report.Title}</p>
+                                        <aura:if isTrue="{!report.Email!=null}">
+                                            <p class="slds-truncate slds-list__item"><c:PSE_svg class="fillblack slds-icon slds-icon--x-small slds-icon-utility-email" xlinkHref="/resource/PSE_SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#email"/>&nbsp; <a href="{!'mailto:' + report.Email}">{!report.Email}</a></p>
+                                        </aura:if>
+                                        <aura:if isTrue="{!report.Phone!=null}">
+                                            <p class="slds-truncate slds-list__item"><c:PSE_svg class="fillblack slds-icon slds-icon--x-small slds-icon-utility-call" xlinkHref="/resource/SLDS0102/assets/icons/utility-sprite/svg/symbols.svg#call"/>&nbsp; <a href="{!'tel:' + report.Phone}">{!report.Phone}</a></p>
+                                        </aura:if>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </div>
+        </aura:renderIf>
+    </div>
+    <!-- ANIMATED LOADER -->
+    <aura:if isTrue="{!v.displayLoader}">
+        <div class="slds">
+            <div id="spinner" class="slds-spinner--medium">
+                <img src="/resource/PSE_SLDS0102/assets/images/spinners/slds_spinner.gif" alt="Loading..." />
+            </div>
+        </div>
+    </aura:if>
+</aura:component>
