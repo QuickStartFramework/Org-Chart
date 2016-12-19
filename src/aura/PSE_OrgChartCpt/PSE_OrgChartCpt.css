@@ -210,3 +210,7 @@
 .THIS a {
     text-decoration: none !important;
 }
+
+.THIS.reposition{
+    position:relative;
+}

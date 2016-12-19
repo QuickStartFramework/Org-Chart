@@ -2,7 +2,7 @@
     // =========================================
     // LOAD TREE
     // Entry : Id userId
-    // Set :
+    // Set : 
     // - USER currentUser 	: USER record of id :userId
     // - USER[] listManagers 	: Management chain above :userId
     // - USER[] listReports 	: All reports of :userId
@@ -13,16 +13,16 @@
     loadTree : function(component, userId) {
         var loadHierarchy = component.get("c.getHierarchy");
         if (userId) loadHierarchy.setParams({ userid : userId });
-        component.set("v.displayLoader",true);
+        component.set("v.displayLoader",true); 
         loadHierarchy.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 console.log(response.getReturnValue());
                 component.set("v.currentUser", response.getReturnValue().selectedUser);
                 component.set("v.listManagers", response.getReturnValue().listManagers);
-                component.set("v.listReports", response.getReturnValue().listReports);
-                component.set("v.nextSibling", response.getReturnValue().nextSibling);
-                component.set("v.prevSibling", response.getReturnValue().prevSibling);
+                component.set("v.listReports", response.getReturnValue().listReports); 
+                component.set("v.nextSibling", response.getReturnValue().nextSibling); 
+                component.set("v.prevSibling", response.getReturnValue().prevSibling); 
                 // Circle Reports
                 var reports=response.getReturnValue().listReports;
                 var listReports=[];
@@ -31,11 +31,11 @@
                 for (var i=0;i<10&i<reports.length;i++) { // Ellipse 150w, 120h
                     listReports.push({});
                     listReports[i].user=reports[i];
-                    listReports[i].left=-160*Math.cos(i*(Math.PI)/(10-1));
+                    listReports[i].left=-160*Math.cos(i*(Math.PI)/(10-1)); 
                     listReports[i].top=120*Math.sin(i*(Math.PI) /(10-1));
                     circleReports.push(listReports[i]);
                 }
-                component.set("v.circleReports", circleReports);
+                component.set("v.circleReports", circleReports); 
                 console.log(circleReports);
                 // Collapse flat list, hide loader and search areas
                 component.set("v.flat",false);
@@ -57,15 +57,15 @@
     },
     // ========================================================================
     // USER SEARCH
-    // Entry : String inSearchStr
-    // Set :
+    // Entry : String inSearchStr 
+    // Set : 
     // - USER[] searchResults	: List of matching records (SOSL Query)
     // ========================================================================
     userSearch : function(component, inSearchStr) {
         var usrSearch = component.get("c.getUserSearch");
         console.log('User Search Search String: ' + inSearchStr);
         component.set("v.displayLoader",true);
-        if (inSearchStr != '') {
+        if (inSearchStr != '') {          
             usrSearch.setParams({inSearchStr: inSearchStr});
             usrSearch.setCallback(this, function(response){
                 component.set("v.displayLoader",false);
@@ -84,6 +84,6 @@
             }
             });
             $A.enqueueAction(usrSearch);
-        }
+        } 
     }
 })
