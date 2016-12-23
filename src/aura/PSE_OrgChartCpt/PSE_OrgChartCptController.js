@@ -3,17 +3,17 @@
         helper.loadTree(component,null);
     },
     toggleFlatList : function(component, event, helper) {
-        console.log('Toggle Flat List');
+       // console.log('Toggle Flat List');
         component.set("v.flat",!component.get("v.flat"));
         component.set("v.search",false); // Hide Search area
     },
     toggleSearch : function(component, event, helper) {
-        console.log('Toggle Search');
+       // console.log('Toggle Search');
         component.set("v.search",!component.get("v.search"));
     },
     selectNode : function(component, event, helper) {
         var nodeId=event.target.getAttribute("data-id");
-        console.log('select Node '+nodeId);
+       // console.log('select Node '+nodeId);
         helper.loadTree(component,nodeId);
     },
     prevSibling : function(component, event, helper) {

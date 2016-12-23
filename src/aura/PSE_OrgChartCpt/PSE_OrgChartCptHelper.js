@@ -17,7 +17,7 @@
         loadHierarchy.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                console.log(response.getReturnValue());
+               // console.log(response.getReturnValue());
                 component.set("v.currentUser", response.getReturnValue().selectedUser);
                 component.set("v.listManagers", response.getReturnValue().listManagers);
                 component.set("v.listReports", response.getReturnValue().listReports); 
@@ -39,7 +39,7 @@
                 }
                 
                 component.set("v.circleReports", circleReports); 
-                console.log(circleReports);
+               // console.log(circleReports);
                 // Collapse flat list, hide loader and search areas
                 component.set("v.flat",false);
                 component.set("v.displayLoader",false);
@@ -49,10 +49,10 @@
                 var errors = response.getError();
                 if (errors) {
                     if (errors[0] && errors[0].message) {
-                        console.log("Error message: " + errors[0].message);
+                     //   console.log("Error message: " + errors[0].message);
                     }
                 } else {
-                    console.log("Unknown error");
+                  //  console.log("Unknown error");
                 }
             }
         });
@@ -66,9 +66,9 @@
     // ========================================================================
     userSearch : function(component, inSearchStr) {
         var usrSearch = component.get("c.getUserSearch");
-        console.log('User Search Search String: ' + inSearchStr);
+      //  console.log('User Search Search String: ' + inSearchStr);
         component.set("v.displayLoader",true);
-        if (inSearchStr != '') {          
+        if (inSearchStr !== '') {          
             usrSearch.setParams({inSearchStr: inSearchStr});
             usrSearch.setCallback(this, function(response){
                 component.set("v.displayLoader",false);
@@ -79,10 +79,10 @@
                 var errors = response.getError();
                 if (errors) {
                     if (errors[0] && errors[0].message) {
-                        console.log("Error message: " + errors[0].message);
+                     //   console.log("Error message: " + errors[0].message);
                     }
                 } else {
-                    console.log("Unknown error");
+                  //  console.log("Unknown error");
                 }
             }
             });
