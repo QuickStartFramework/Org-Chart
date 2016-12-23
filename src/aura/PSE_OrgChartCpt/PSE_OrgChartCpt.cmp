@@ -1,5 +1,5 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" controller="PSE_OrgChartCptCtl">
-	<aura:attribute name="currentUser" type="Object"/>
+    <aura:attribute name="currentUser" type="Object"/>
     <aura:attribute name="search" type="boolean"/>
     <aura:attribute name="flat" type="boolean"/>
     <aura:attribute name="displayLoader" type="boolean" default="true"/>
@@ -10,170 +10,48 @@
     <aura:attribute name="circleReports" type="Object[]"/>
     <aura:attribute name="searchResults" type="Object[]"/>
     
-    
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
-    <!-- PAGE HEADER -->
-    <div class="slds">
-        <div class="slds-page-header" role="banner">
-            <div class="slds-grid">
-                <div class="slds-col slds-has-flexi-truncate">
-                    <div class="slds-media">
-                        <div class="slds-media__figure">
-                            <lightning:icon iconName="standard:user" size="large"/>
-                        </div>
-                        <div class="slds-media__body">
-                            <p class="slds-text-heading--label">Quick Start Framework</p>
-                            <div class="slds-grid">
-                                <h1 class="slds-text-heading--medium slds-m-right--small slds-truncate slds-align-middle" title="Record Title">Org Chart</h1>
-                            </div>
-                        </div>  
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- SEARCH SECTION -->
-    <div class="slds">
-        <aura:renderIf isTrue="{!v.search}">
-            <div id="search">
-                <a class="backBtn" onclick="{!c.toggleSearch}"> 
-                   <lightning:icon iconName="utility:up" size="medium" class="fillback"/>
-                </a>
-                <div class="slds-lookup" data-select="multi" data-scope="single" data-typeahead="true">
-                    <div class="slds-form-element">
-                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
-                            <lightning:icon iconName="utility:search" size="medium" class="slds-input__icon"/>
-     <!-- <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" onkeyup="{!c.doSearch}"/> -->
-                            <ui:inputText aura:id="txtSearch" class="slds-input" placeholder="Search" value="" keyup="{!c.doSearch}" updateOn="keyup"/>
-                        </div>
-                    </div>
-                    <!-- Search Results -->
-                    <aura:renderIf isTrue="{!v.searchResults.length>0}">
-                        <ul class="slds-list--vertical slds-has-dividers">
-                            <aura:iteration items="{!v.searchResults}" var="report">
-                                <li class="slds-list__item">
-                                    <div class="slds-media slds-tile">
-                                        <div class="slds-media__figure">
-                                            <span class="slds-avatar slds-avatar--small slds-avatar--circle">
-                                                <img  data-id="{!report.Id}" onclick="{!c.selectNode}"  src="{!report.SmallPhotoUrl}" alt="company name" />
-                                            </span>
-                                        </div>
-                                        <div class="slds-media__body">
-                                            <p class="slds-tile__title slds-truncate slds-text-body--medium"><a href="#">{!report.Name}</a></p>
-                                            <ul class="slds-tile__detail slds-list--vertical slds-text-body--small">
-                                                <p class="slds-truncate slds-list__item">{!report.Title}</p>
-                                                <aura:if isTrue="{!report.Email!=null}">
-                                                    <p class="slds-truncate slds-list__item">
-                                                        <lightning:icon class="fillback" iconName="utility:email" size="x-small"/>
-                                                        &nbsp; <a href="{!'mailto:' + report.Email}">{!report.Email}</a></p>
-                                                </aura:if>
-                                                <aura:if isTrue="{!report.Phone!=null}">
-                                                    <p class="slds-truncate slds-list__item">
-                                                        <lightning:icon class="fillback" iconName="utility:call" size="x-small"/>
-                                                        &nbsp; <a href="{!'tel:' + report.Phone}">{!report.Phone}</a></p>
-                                                </aura:if>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-                            </aura:iteration>
-                        </ul>    
+    
+    <lightning:layout class="slds-grid--vertical grid">
+        <!-- PAGE HEADER + Action Icons-->
+        <lightning:layoutItem flexibility="no-shrink" class="header">
+            <!-- PAGE HEADER -->
+            <lightning:card iconName="custom:custom15" variant="narrow">
+                <aura:set attribute="title">
+                    <h2>Quick Start Framework - Org Chart </h2>
+                </aura:set>
+            </lightning:card>
+            <!-- ACTION ICONS SEARCH / TOGGLE FLAT -->
+            <aura:renderIf isTrue="{!and(v.flat == false, v.search == false)}">
+                <div class="topActions">
+                    <lightning:buttonIcon iconName="utility:search" variant="bare" size="large" alternativeText="search" onclick="{!c.toggleSearch}"/>
+                    <aura:renderIf isTrue="{!v.listReports.length>0}">
+                        <lightning:buttonIcon iconName="utility:list" variant="bare" size="large" alternativeText="List" onclick="{!c.toggleFlatList}"/>
                     </aura:renderIf>
-                </div>
-            </div>
-        </aura:renderIf>  
-    </div>
-    <!-- MANAGERS SECTION -->
-    <aura:renderIf isTrue="{!and(v.flat == false,v.search == false)}">
-        <div id="scrolling-top">
-            <div class="top">
-                <div class="top-container" id="top-container">
-                    <aura:iteration items="{!v.listManagers}" var="mgr">
-                        <div class="orgchart-manager">
-                            <div class="orgchart-badge medium" data-id="{!mgr.Id}" onclick="{!c.selectNode}"  style="{!'background-image: url('+mgr.SmallPhotoUrl+')'}"></div>
-                            <div class="orgchart-name slds"><p class="slds slds-text-heading--small">{!mgr.Name}</p>
-                            </div>
-                        </div>
-                    </aura:iteration>
-                </div> 
-            </div>
-        </div>
-    </aura:renderIf>
-    <!-- SELECTED USER -->
-    <aura:renderIf isTrue="{!v.search == false}">
-        <div class="middle-container">
-            <a href="javascript:void(0);" onclick="{!c.navigateToSelectedUser}">
-                <div class="orgchart-badge big" style="{!'background-image: url('+v.currentUser.SmallPhotoUrl+')'}"></div>
-                <div class="orgchart-name slds">
-                    <p class="slds slds-text-heading--medium">{!v.currentUser.Name}</p>
-                </div>
-                <div class="orgchart-userinfo">{!v.currentUser.Title}&nbsp;</div>           
-            </a>
-            <div class="orgchart-highlight">
-                <div id="emailContact" class="slds">
-                    <aura:if isTrue="{!v.currentUser.Email!=null}">
-                        <a href="{!'mailto:' + v.currentUser.Email}">
-                            <lightning:icon class="fillback" iconName="utility:email" size="medium"/>
-                        </a>     
-                    </aura:if>
-                </div>
-                <div onclick="{!c.prevSibling}" id="leftArrow" class="slds"> 
-                    <aura:if isTrue="{!v.prevSibling!=null}">
-                        <lightning:icon class="fillback" iconName="utility:chevronleft" size="medium"/>
-                    </aura:if>
-                </div>
-                
-                <div id="phoneContact" class="slds">    
-                    <aura:if isTrue="{!v.currentUser.Phone!=null}">
-                        <a href="{!'tel:' + v.currentUser.Phone}">
-                            <lightning:icon class="fillback" iconName="utility:call" size="medium"/>
-						</a>                   
-                    </aura:if>
-                </div>				
-                
-                <div onclick="{!c.nextSibling}" id="rightArrow" class="slds">
-                    <aura:renderIf isTrue="{!v.nextSibling!=null}">
-                        <lightning:icon class="fillback" iconName="utility:chevronright" size="medium"/>
-                    </aura:renderIf>
-                </div>
-            </div>
-        </div>
-    </aura:renderIf>
-    <!-- SEMI CIRCLE REPORTS -->
-    <aura:renderIf isTrue="{!and(and(v.flat == false,v.listReports.length>0), v.search == false)}">
-        <div class="bottom-container"> 
-            <div class="listCircleReports">
-                <aura:iteration items="{!v.circleReports}" var="report">
-                    <div class="orgchart-subordinate" style="{!'left:'+report.left+'px;'+'top:'+report.top+'px'}">
-                        <div data-id="{!report.user.Id}" onclick="{!c.selectNode}" class="orgchart-badge small" style="{!'background-image: url('+report.user.SmallPhotoUrl+')'}"></div>
-                    </div>
-                </aura:iteration>
-            </div>
-        </div>
-    </aura:renderIf>
-    <!-- ACTION ICONS SEARCH / TOGGLE FLAT -->
-    <aura:renderIf isTrue="{!and(v.flat == false, v.search == false)}">
-        <div class="actionIcons">
-            <aura:renderIf isTrue="{!v.listReports.length>0}">
-                <div id="openFlatList" onclick="{!c.toggleFlatList}">
-                    <a class="slds">
-                        <lightning:icon class="fillback" iconName="utility:list" size="medium"/>
-                    </a>
                 </div>
             </aura:renderIf>
-            <div id="openSearch" onclick="{!c.toggleSearch}">
-                <a class="slds">
-                    <lightning:icon class="fillback" iconName="utility:search" size="medium"/>
-                </a>
-            </div>
-        </div>
-    </aura:renderIf>
-    <!-- FLAT LIST OF REPORTS -->
-    <div class="slds">
+            
+        </lightning:layoutItem>
+        <!-- MANAGERS SECTION -->
+        <aura:renderIf isTrue="{!and(v.flat == false,v.search == false)}">
+            <lightning:layoutItem flexibility="grow" class="slds-scrollable--y">
+                <lightning:layout aura:id="mgrSection" horizontalAlign="end" verticalAlign="center" class="slds-grid--vertical managerSection">     
+                    <aura:iteration items="{!v.listManagers}" var="mgr">
+                        <lightning:layoutItem flexibility="no-grow">
+                            <div class="orgchart-badge medium" data-id="{!mgr.Id}" onclick="{!c.selectNode}"  style="{!'background-image: url('+mgr.SmallPhotoUrl+')'}"></div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="no-grow">
+                            <div class="orgchart-name"><p class="slds slds-text-heading--small">{!mgr.Name}</p></div>
+                        </lightning:layoutItem>
+                    </aura:iteration>
+                </lightning:layout>
+            </lightning:layoutItem>
+        </aura:renderIf>
+        <!-- FLAT LIST OF REPORTS -->
         <aura:renderIf isTrue="{!and(v.flat,v.listReports.length>0)}">
             <div id="flatreports" class="slds-scrollable--y" > 
                 <a class="backBtn" onclick="{!c.toggleFlatList}">
-                    <lightning:icon class="fillback" iconName="utility:up" size="medium"/>
+                    <lightning:icon iconName="utility:up" size="medium"/>
                 </a>
                 <ul class="slds-list--vertical slds-has-dividers">
                     <aura:iteration items="{!v.listReports}" var="report">
@@ -190,12 +68,12 @@
                                         <p class="slds-truncate slds-list__item">{!report.Title}</p>
                                         <aura:if isTrue="{!report.Email!=null}">
                                             <p class="slds-truncate slds-list__item">
-                                                <lightning:icon class="fillback" iconName="utility:email" size="x-small"/>
+                                                <lightning:icon iconName="utility:email" size="x-small"/>
                                                 &nbsp; <a href="{!'mailto:' + report.Email}">{!report.Email}</a></p>
                                         </aura:if>
                                         <aura:if isTrue="{!report.Phone!=null}">
                                             <p class="slds-truncate slds-list__item">
-                                                <lightning:icon class="fillback" iconName="utility:call" size="x-small"/>
+                                                <lightning:icon iconName="utility:call" size="x-small"/>
                                                 &nbsp; <a href="{!'tel:' + report.Phone}">{!report.Phone}</a></p>
                                         </aura:if>
                                     </ul>
@@ -206,9 +84,128 @@
                 </ul>
             </div>
         </aura:renderIf>
-    </div>
+        <!-- CURRENT USER SECTION -->
+        <aura:renderIf isTrue="{!v.search == false}"> <!-- SELECTED USER -->
+            <lightning:layoutItem flexibility="no-shrink" class="bottom">
+                <lightning:layout horizontalAlign="spread" class="slds-grid--vertical greybar">
+                    <lightning:layoutItem flexibility="no-grow" >
+                        <lightning:layout horizontalAlign="spread" verticalAlign="center">
+                            <lightning:layoutItem class="actionIcons">
+                                <div onclick="{!c.prevSibling}" id="leftArrow"> 
+                                    <aura:if isTrue="{!v.prevSibling!=null}">
+                                        <lightning:icon iconName="utility:chevronleft" size="medium"/>
+                                    </aura:if>
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem class="actionIcons">
+                                <div class="orgchart-highlight">
+                                    <div id="emailContact">
+                                        <aura:if isTrue="{!v.currentUser.Email!=null}">
+                                            <a href="{!'mailto:' + v.currentUser.Email}">
+                                                <lightning:icon iconName="utility:email" size="medium"/>
+                                            </a>     
+                                        </aura:if>
+                                    </div></div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem >
+                                <a href="javascript:void(0);" onclick="{!c.navigateToSelectedUser}">
+                                    <div class="orgchart-badge big" style="{!'background-image: url('+v.currentUser.SmallPhotoUrl+')'}"></div>
+                                </a>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem class="actionIcons">
+                                <div id="phoneContact">    
+                                    <aura:if isTrue="{!v.currentUser.Phone!=null}">
+                                        <a href="{!'tel:' + v.currentUser.Phone}">
+                                            <lightning:icon iconName="utility:call" size="medium"/>
+                                        </a>                   
+                                    </aura:if>
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem class="actionIcons">
+                                <div onclick="{!c.nextSibling}" id="rightArrow">
+                                    <aura:renderIf isTrue="{!v.nextSibling!=null}">
+                                        <lightning:icon iconName="utility:chevronright" size="medium"/>
+                                    </aura:renderIf>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="no-grow">
+                        <a href="javascript:void(0);" onclick="{!c.navigateToSelectedUser}" style="width:100%;text-align:center;">
+                            <div class="orgchart-name slds">
+                                <p class="slds slds-text-heading--medium">{!v.currentUser.Name}</p>
+                            </div>
+                            <div class="orgchart-userinfo">{!v.currentUser.Title}&nbsp;</div>           
+                        </a>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="grow">
+                        <aura:renderIf isTrue="{!and(and(v.flat == false,v.listReports.length>0), v.search == false)}">
+                            <div class="bottom-container"> 
+                                <div class="listCircleReports slds-grid slds-grid--align-spread">
+                                    <aura:iteration items="{!v.circleReports}" var="report">
+                                        <div data-id="{!report.user.Id}" onclick="{!c.selectNode}" class="orgchart-badge small" style="{!'margin-top:'+report.top+'px;background-image: url('+report.user.SmallPhotoUrl+')'}"></div>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                        </aura:renderIf>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:layoutItem>
+        </aura:renderIf>
+        <!-- SEARCH SECTION -->
+        <aura:renderIf isTrue="{!v.search}">
+            <lightning:layoutItem flexibility="grow" >
+                <lightning:buttonIcon iconName="utility:up" size="large" variant="bare" onclick="{! c.toggleSearch }" alternativeText="Back" />
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                        <lightning:icon iconName="utility:search" size="x-small" class="slds-input__icon"/>
+                        <!-- <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" onkeyup="{!c.doSearch}"/> -->
+                        <ui:inputText aura:id="txtSearch" class="slds-lookup__search-input slds-input" placeholder="Search" value="" keyup="{!c.doSearch}" updateOn="keyup"/>
+                    </div>
+                </div>
+                <!-- Search Results -->
+                <aura:renderIf isTrue="{!v.searchResults.length>0}">
+                    <ul class="slds-list--vertical slds-has-dividers resultScroll">
+                        <aura:iteration items="{!v.searchResults}" var="report">
+                            <li class="slds-list__item">
+                                <div class="slds-media slds-tile">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-avatar slds-avatar--small slds-avatar--circle">
+                                            <img  data-id="{!report.Id}" onclick="{!c.selectNode}"  src="{!report.SmallPhotoUrl}" alt="company name" />
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <p class="slds-tile__title slds-truncate slds-text-body--medium">
+                                            <a href="#">{!report.Name}</a>
+                                        </p>
+                                        <ul class="slds-tile__detail slds-list--vertical slds-text-body--small">
+                                            <p class="slds-truncate slds-list__item">{!report.Title}</p>
+                                            <aura:if isTrue="{!report.Email!=null}">
+                                                <p class="slds-truncate slds-list__item">
+                                                    <lightning:icon iconName="utility:email" size="x-small"/>
+                                                    &nbsp; <a href="{!'mailto:' + report.Email}">{!report.Email}</a>
+                                                </p>
+                                            </aura:if>
+                                            <aura:if isTrue="{!report.Phone!=null}">
+                                                <p class="slds-truncate slds-list__item">
+                                                    <lightning:icon iconName="utility:call" size="x-small"/>
+                                                    &nbsp; <a href="{!'tel:' + report.Phone}">{!report.Phone}</a>
+                                                </p>
+                                            </aura:if>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </aura:iteration>
+                    </ul>    
+                </aura:renderIf>
+                
+            </lightning:layoutItem>
+        </aura:renderIf>         
+    </lightning:layout>
     <!-- ANIMATED LOADER --> 
     <aura:if isTrue="{! v.displayLoader}">
-         <lightning:spinner variant="brand" size="medium" class="reposition" />
-    </aura:if> 
+        <lightning:spinner variant="brand" size="medium" class="reposition" />
+    </aura:if>
+    
 </aura:component>
