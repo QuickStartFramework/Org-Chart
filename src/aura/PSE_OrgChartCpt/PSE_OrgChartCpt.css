@@ -1,3 +1,60 @@
+.THIS.grid{
+   height:calc(100vh - 45px);
+    /*max-height:calc(100vh - 45px);
+    Viewport height - app header */
+}
+
+.THIS .searchgrid{
+   height:calc(100vh - 45px - 75px);
+   max-height:calc(100vh - 45px - 75px);
+  /* Viewport height - app header - component header*/
+  height:100%;
+}
+.THIS .resultScroll{
+    overflow-y: scroll;
+    max-height: calc(100vh - 45px - 75px - 75px);
+    /* Viewport height - app header - component header - search input*/
+}
+
+.THIS .header{
+    flex-basis:75px;
+}
+.THIS .bottom{
+    flex-basis:270px;
+    min-height:270px;
+}
+
+.THIS .managerSection{
+    height:calc(100vh - 45px - 75px - 270px);
+    min-height: min-content;
+   /* Viewport height - app header - component header - component footer*/
+}
+
+
+@media only screen and (min-width: 64.0625em){
+  .THIS.grid{
+        height:calc(100vh - 90px - 65px);
+    }
+ .THIS .managerSection{
+    height:calc(100vh - 90px - 65px - 270px);
+   /* Viewport height - app header - component header - component footer*/
+}
+   .THIS .header{
+    display:none;
+} 
+    .THIS .searchgrid{
+   height:calc(100vh - 90px - 65px);
+   max-height:calc(100vh - 90px - 65px);
+  /* Viewport height - app header - component header*/
+}
+    .THIS .resultScroll{
+    overflow-y: scroll;
+    max-height: calc(100vh - 90px - 65px - 75px);
+    /* Viewport height - app header - component header - search input*/
+}
+}
+
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -26,14 +83,8 @@
   }
 }
 
-
-.THIS .orgchart-manager {
-    /* Manager Component : height = 80px [50px badge + 30px vetical bar] */
-    position:relative;
-    height:80px;
-}
 .THIS .orgchart-badge.medium:after { /* Display a vertical bar of 30px height below the badge */
-    top: 50px;
+    top: 48px;
     bottom: 0;
     position: absolute;
     content: " ";
@@ -43,122 +94,14 @@
     left: 50%;
     height:30px;
 }
-.THIS  .orgchart-name {
-    /* Manager Name */
-    position:relative;
-    text-align: center;
-    color:#015ba7;
-    z-index:200;
-    line-height:30px;
-    vertical-align: top;
-}
-
-.THIS .listCircleReports {
-    position:relative;
-    left:calc(50% - 40px);
-}
-.THIS .orgchart-subordinate {
-    position:absolute;
-    height:32px;
-}
-
-.THIS .fillblack {
-    fill:#5876A3 !important;
-}
-.THIS .top {
-    width:100%;
-    display:table;
-}
-
-.THIS #flatreports 
-{
-	animation: fadeInUp 0.8s;
-}
-.THIS #search
-{
-	margin-top:20px;
-    animation: fadeInUp 0.8s;
-}
-.THIS#scrolling-top {
-    width:100%;
-    overflow-y:scroll;
-    max-height:100%;
-    height:calc(100vh - 400px);
-	-webkit-overflow-scrolling:touch;
-}
-.THIS.middle-container {
-    /* Contains the selected user  */
-	position:relative;
-}
-
-.THIS .top-container {
-    /* Contains the managers tree */
-    display:table-cell;
-    vertical-align:bottom;
-    margin: 0px auto;
-    height:1000px;
-}
-
-.THIS.bottom-container {
-    position:relative;
-    top:0px;
-}
-
-.THIS .backBtn {
-    position:relative;
-    top:0;
-    width:32px;
-    height:32px;
-}
-
-.THIS.actionIcons{
-    position:absolute;
-    top:100px;
-    width:100%;
-}
-.THIS.actionIcons > #openFlatList{
-    position:absolute;
-    left:20px;
-}
-.THIS.actionIcons > #openSearch{
-    position:absolute;
-    right:20px;
-}
-.THIS  .orgchart-highlight {
-    position:absolute;
-    background-color:#eeeeee;
-	height:50px;
-    width:100%;
-    top:15px;
-}
-
-.THIS #leftArrow {
-    position:absolute;
-    left:calc(50% - 150px);
-    top:10px;
-}
-.THIS #rightArrow {
-    position:absolute;
-    right:calc(50% - 150px);
-    top:10px;
-}
-.THIS #emailContact {
-    position:absolute;
-    left:calc(50% - 90px);
-    top:10px;
-}
-.THIS #phoneContact {
-    position:absolute;
-    right:calc(50% - 90px);
-    top:10px;
-}
-
-.THIS  .orgchart-userinfo {
-    position:relative;
-    text-align: center;
-    left: 0;
-    top:0px;
-    color:#bbbbbb;
+.THIS .greybar{
+    background:linear-gradient(to bottom,
+            transparent,
+            transparent 15px,
+            #eeeeee 15px,
+            #eeeeee 65px,
+            transparent 65px,
+            transparent )
 }
 
 .THIS .orgchart-badge {
@@ -172,25 +115,21 @@
     background-position: center;
     background-repeat: no-repeat;
     border-width:2px;
-    left: 50%;
     border-color:#eeeeee;
     border-style: solid;
-    position: relative;
     color: #fff;
 }
-.THIS  .orgchart-badge.medium {
+.THIS .orgchart-badge.medium {
     width: 50px;
     height: 50px;
     line-height: 50px;
-    top: 0px;
-    margin-left: -25px;
-/*    animation: fadeInDown 0.5s;*/
+    position:relative;
 }
 .THIS  .orgchart-badge.small {
-    width: 38px;
-    height: 38px;
-    top: 0px;
-    left: 50%;
+    width: calc((100vw - 20px) / 10);
+    height: calc((100vw - 20px) / 10);
+    max-width: 50px;
+    max-height:50px;
     border-color:#eeeeee;
     animation: fadeInDown 0.8s;
     box-shadow: 1px 1px 1px #888888;
@@ -199,18 +138,50 @@
     width: 80px;
     height: 80px;
     line-height: 50px;
-    margin-left: -40px;
     border-color:#ffbbcc;
 }
 
-.THIS #spinner {
-	margin: auto;
+.THIS .actionIcons{
+    width:40px;
 }
 
-.THIS a {
-    text-decoration: none !important;
-}
-
-.THIS.reposition{
+.THIS  .orgchart-name {
+    /* Manager Name */
     position:relative;
+    text-align: center;
+    color:#015ba7;
+    z-index:200;
+    line-height:30px;
+    vertical-align: top;
+    height:30px;
+}
+.THIS .orgchart-manager {
+    /* Manager Component : height = 80px [50px badge + 30px vetical bar] */
+    position:relative;
+    height:80px;
+}
+
+.THIS .listCircleReports{
+    margin-right:10px;
+    margin-left:10px;   
+}
+
+.THIS .topActions{
+    position:relative;
+    width:100%;
+    top:10px;
+}
+.THIS .topActions button:nth-child(2){
+    position:absolute;
+    left:20px;
+}
+.THIS .topActions button:nth-child(1){
+    position:absolute;
+    right:20px;
+}
+
+.THIS .resultScroll{
+    overflow-y: scroll;
+    max-height: calc(100vh - 45px - 75px - 75px);
+    /* Viewport height - app header - component header - search input*/
 }

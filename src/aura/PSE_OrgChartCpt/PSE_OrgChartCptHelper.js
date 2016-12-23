@@ -31,10 +31,13 @@
                 for (var i=0;i<10&i<reports.length;i++) { // Ellipse 150w, 120h
                     listReports.push({});
                     listReports[i].user=reports[i];
-                    listReports[i].left=-160*Math.cos(i*(Math.PI)/(10-1)); 
-                    listReports[i].top=120*Math.sin(i*(Math.PI) /(10-1));
+                   // listReports[i].left=-160*Math.cos(i*(Math.PI)/(10-1)); 
+                  //  listReports[i].top=120*Math.sin(i*(Math.PI) /(10-1));
+                   // listReports[i].left=1-(); //120-120*Math.cos(i*(Math.PI)/(reports.length-1)); 
+                    listReports[i].top=10*reports.length*Math.sin(((i/(reports.length-1))*(Math.PI)));
                     circleReports.push(listReports[i]);
                 }
+                
                 component.set("v.circleReports", circleReports); 
                 console.log(circleReports);
                 // Collapse flat list, hide loader and search areas
