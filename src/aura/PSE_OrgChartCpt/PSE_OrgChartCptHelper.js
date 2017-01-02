@@ -30,15 +30,12 @@
                 var listReports=[];
                 var circleReports=[];
                 if (reports.length>0){
-                    for (var i=0;i<10;i+=1) { // Ellipse 150w, 120h
+                    for (var i=0;i<10;i+=1) {
                         if(i >= reports.length){
                             break;
                         }
                         listReports.push({});
                         listReports[i].user=reports[i];
-                       // listReports[i].left=-160*Math.cos(i*(Math.PI)/(10-1));
-                      //  listReports[i].top=120*Math.sin(i*(Math.PI) /(10-1));
-                       // listReports[i].left=1-(); //120-120*Math.cos(i*(Math.PI)/(reports.length-1));
                         listReports[i].top=10*reports.length*Math.sin(((i/(reports.length-1))*(Math.PI)));
                         circleReports.push(listReports[i]);
                     }

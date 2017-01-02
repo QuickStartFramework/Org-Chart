@@ -30,7 +30,6 @@
                     </aura:renderIf>
                 </div>
             </aura:renderIf>
-            
         </lightning:layoutItem>
         <!-- MANAGERS SECTION -->
         <aura:renderIf isTrue="{!and(v.flat == false,v.search == false)}">
@@ -49,10 +48,8 @@
         </aura:renderIf>
         <!-- FLAT LIST OF REPORTS -->
         <aura:renderIf isTrue="{!and(v.flat,v.listReports.length>0)}">
-            <div id="flatreports" class="slds-scrollable--y" > 
-                <a class="backBtn" onclick="{!c.toggleFlatList}">
-                    <lightning:icon iconName="utility:up" size="medium"/>
-                </a>
+            <div class="slds-scrollable--y" > 
+                <lightning:buttonIcon iconName="utility:up" variant="bare" size="large" alternativeText="back" onclick="{!c.toggleFlatList}"/>
                 <ul class="slds-list--vertical slds-has-dividers">
                     <aura:iteration items="{!v.listReports}" var="report">
                         <li class="slds-list__item">
@@ -91,21 +88,18 @@
                     <lightning:layoutItem flexibility="no-grow" >
                         <lightning:layout horizontalAlign="spread" verticalAlign="center">
                             <lightning:layoutItem class="actionIcons">
-                                <div onclick="{!c.prevSibling}" id="leftArrow"> 
-                                    <aura:if isTrue="{!v.prevSibling!=null}">
-                                        <lightning:icon iconName="utility:chevronleft" size="medium"/>
-                                    </aura:if>
-                                </div>
+                               <aura:renderIf isTrue="{!v.prevSibling!=null}">
+        								 <lightning:buttonIcon iconName="utility:chevronleft" variant="bare" size="large" alternativeText="previous" onclick="{!c.prevSibling}"/>
+                               </aura:renderIf>
                             </lightning:layoutItem>
                             <lightning:layoutItem class="actionIcons">
-                                <div class="orgchart-highlight">
-                                    <div id="emailContact">
-                                        <aura:if isTrue="{!v.currentUser.Email!=null}">
-                                            <a href="{!'mailto:' + v.currentUser.Email}">
-                                                <lightning:icon iconName="utility:email" size="medium"/>
-                                            </a>     
-                                        </aura:if>
-                                    </div></div>
+                                <div>
+                                    <aura:renderIf isTrue="{!v.currentUser.Email!=null}">
+                                        <a href="{!'mailto:' + v.currentUser.Email}">
+                                            <lightning:icon iconName="utility:email" size="medium"/>
+                                        </a>     
+                                    </aura:renderIf>
+                                </div>
                             </lightning:layoutItem>
                             <lightning:layoutItem >
                                 <a href="javascript:void(0);" onclick="{!c.navigateToSelectedUser}">
@@ -113,20 +107,18 @@
                                 </a>
                             </lightning:layoutItem>
                             <lightning:layoutItem class="actionIcons">
-                                <div id="phoneContact">    
-                                    <aura:if isTrue="{!v.currentUser.Phone!=null}">
+                                <div>    
+                                    <aura:renderIf isTrue="{!v.currentUser.Phone!=null}">
                                         <a href="{!'tel:' + v.currentUser.Phone}">
                                             <lightning:icon iconName="utility:call" size="medium"/>
                                         </a>                   
-                                    </aura:if>
+                                    </aura:renderIf>
                                 </div>
                             </lightning:layoutItem>
                             <lightning:layoutItem class="actionIcons">
-                                <div onclick="{!c.nextSibling}" id="rightArrow">
-                                    <aura:renderIf isTrue="{!v.nextSibling!=null}">
-                                        <lightning:icon iconName="utility:chevronright" size="medium"/>
-                                    </aura:renderIf>
-                                </div>
+                               <aura:renderIf isTrue="{!v.nextSibling!=null}">
+        								 <lightning:buttonIcon iconName="utility:chevronright" variant="bare" size="large" alternativeText="next" onclick="{!c.nextSibling}"/>
+                               </aura:renderIf>
                             </lightning:layoutItem>
                         </lightning:layout>
                     </lightning:layoutItem>
@@ -159,7 +151,6 @@
                 <div class="slds-form-element">
                     <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
                         <lightning:icon iconName="utility:search" size="x-small" class="slds-input__icon"/>
-                        <!-- <input id="lookup" class="slds-input" type="text" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" onkeyup="{!c.doSearch}"/> -->
                         <ui:inputText aura:id="txtSearch" class="slds-lookup__search-input slds-input" placeholder="Search" value="" keyup="{!c.doSearch}" updateOn="keyup"/>
                     </div>
                 </div>
@@ -180,18 +171,18 @@
                                         </p>
                                         <ul class="slds-tile__detail slds-list--vertical slds-text-body--small">
                                             <p class="slds-truncate slds-list__item">{!report.Title}</p>
-                                            <aura:if isTrue="{!report.Email!=null}">
+                                            <aura:renderIf isTrue="{!report.Email!=null}">
                                                 <p class="slds-truncate slds-list__item">
                                                     <lightning:icon iconName="utility:email" size="x-small"/>
                                                     &nbsp; <a href="{!'mailto:' + report.Email}">{!report.Email}</a>
                                                 </p>
-                                            </aura:if>
-                                            <aura:if isTrue="{!report.Phone!=null}">
+                                            </aura:renderIf>
+                                            <aura:renderIf isTrue="{!report.Phone!=null}">
                                                 <p class="slds-truncate slds-list__item">
                                                     <lightning:icon iconName="utility:call" size="x-small"/>
                                                     &nbsp; <a href="{!'tel:' + report.Phone}">{!report.Phone}</a>
                                                 </p>
-                                            </aura:if>
+                                            </aura:renderIf>
                                         </ul>
                                     </div>
                                 </div>
@@ -199,13 +190,11 @@
                         </aura:iteration>
                     </ul>    
                 </aura:renderIf>
-                
             </lightning:layoutItem>
         </aura:renderIf>         
     </lightning:layout>
     <!-- ANIMATED LOADER --> 
-    <aura:if isTrue="{! v.displayLoader}">
-        <lightning:spinner variant="brand" size="medium" class="reposition" />
-    </aura:if>
-    
+    <aura:renderIf isTrue="{! v.displayLoader}">
+        <lightning:spinner variant="brand" size="medium"/>
+    </aura:renderIf>    
 </aura:component>

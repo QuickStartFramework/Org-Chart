@@ -10,6 +10,7 @@
   /* Viewport height - app header - component header*/
   height:100%;
 }
+
 .THIS .resultScroll{
     overflow-y: scroll;
     max-height: calc(100vh - 45px - 75px - 75px);
@@ -30,7 +31,7 @@
    /* Viewport height - app header - component header - component footer*/
 }
 
-
+/*Desktop modifictaion of base style*/
 @media only screen and (min-width: 64.0625em){
   .THIS.grid{
         height:calc(100vh - 90px - 65px);
@@ -38,20 +39,20 @@
  .THIS .managerSection{
     height:calc(100vh - 90px - 65px - 270px);
    /* Viewport height - app header - component header - component footer*/
-}
+	}
    .THIS .header{
     display:none;
-} 
+	} 
     .THIS .searchgrid{
    height:calc(100vh - 90px - 65px);
    max-height:calc(100vh - 90px - 65px);
   /* Viewport height - app header - component header*/
-}
+	}
     .THIS .resultScroll{
     overflow-y: scroll;
     max-height: calc(100vh - 90px - 65px - 75px);
     /* Viewport height - app header - component header - search input*/
-}
+	}
 }
 
 
@@ -178,10 +179,4 @@
 .THIS .topActions button:nth-child(1){
     position:absolute;
     right:20px;
-}
-
-.THIS .resultScroll{
-    overflow-y: scroll;
-    max-height: calc(100vh - 45px - 75px - 75px);
-    /* Viewport height - app header - component header - search input*/
 }
