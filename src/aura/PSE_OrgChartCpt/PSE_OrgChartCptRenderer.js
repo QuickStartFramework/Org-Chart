@@ -5,7 +5,7 @@
         window.setTimeout(
             $A.getCallback(function() {
                 var mgrsectionelt=component.find('mgrSection').getElement();
-                if (mgrsectionelt){
+                if (mgrsectionelt && mgrsectionelt.lastChild){
                     mgrsectionelt.lastChild.scrollIntoView(false);
                 }
             }), 500
