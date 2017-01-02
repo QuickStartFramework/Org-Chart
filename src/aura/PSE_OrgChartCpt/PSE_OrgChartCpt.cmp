@@ -35,7 +35,7 @@
         <!-- MANAGERS SECTION -->
         <aura:renderIf isTrue="{!and(v.flat == false,v.search == false)}">
             <lightning:layoutItem flexibility="grow" class="slds-scrollable--y">
-                <lightning:layout aura:id="mgrSection" horizontalAlign="end" verticalAlign="center" class="slds-grid--vertical managerSection">     
+                <div aura:id="mgrSection" class="slds-grid slds-grid--align-end slds-grid--vertical-align-center slds-grid--vertical managerSection">     
                     <aura:iteration items="{!v.listManagers}" var="mgr">
                         <lightning:layoutItem flexibility="no-grow">
                             <div class="orgchart-badge medium" data-id="{!mgr.Id}" onclick="{!c.selectNode}"  style="{!'background-image: url('+mgr.SmallPhotoUrl+')'}"></div>
@@ -44,7 +44,7 @@
                             <div class="orgchart-name"><p class="slds slds-text-heading--small">{!mgr.Name}</p></div>
                         </lightning:layoutItem>
                     </aura:iteration>
-                </lightning:layout>
+                </div>
             </lightning:layoutItem>
         </aura:renderIf>
         <!-- FLAT LIST OF REPORTS -->
