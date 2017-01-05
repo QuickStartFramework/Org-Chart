@@ -1,0 +1,3 @@
+<design:component>
+	<design:attribute name="Title" Description="The title displayed in the app header"/>
+</design:component>

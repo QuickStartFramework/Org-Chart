@@ -1,4 +1,6 @@
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" controller="PSE_OrgChartCptCtl">
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" controller="PSE_OrgChartCptCtl">
+    <aura:attribute name="Title" type="String" Default="Quick Start Framework - Org Chart"/>
+
     <aura:attribute name="currentUser" type="Object"/>
     <aura:attribute name="search" type="boolean"/>
     <aura:attribute name="flat" type="boolean"/>
@@ -9,16 +11,16 @@
     <aura:attribute name="listReports" type="Object[]"/>
     <aura:attribute name="circleReports" type="Object[]"/>
     <aura:attribute name="searchResults" type="Object[]"/>
-    
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
-    
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
     <lightning:layout class="slds-grid--vertical grid">
         <!-- PAGE HEADER + Action Icons-->
         <lightning:layoutItem flexibility="no-shrink" class="header">
             <!-- PAGE HEADER -->
             <lightning:card iconName="custom:custom15" variant="narrow">
                 <aura:set attribute="title">
-                    <h2>Quick Start Framework - Org Chart </h2>
+                    <h2>{!v.Title}</h2>
                 </aura:set>
             </lightning:card>
             <!-- ACTION ICONS SEARCH / TOGGLE FLAT -->
@@ -34,7 +36,7 @@
         <!-- MANAGERS SECTION -->
         <aura:renderIf isTrue="{!and(v.flat == false,v.search == false)}">
             <lightning:layoutItem flexibility="grow" class="slds-scrollable--y">
-                <div aura:id="mgrSection" class="slds-grid slds-grid--align-end slds-grid--vertical-align-center slds-grid--vertical managerSection">     
+                <div aura:id="mgrSection" class="slds-grid slds-grid--align-end slds-grid--vertical-align-center slds-grid--vertical managerSection">
                     <aura:iteration items="{!v.listManagers}" var="mgr">
                         <lightning:layoutItem flexibility="no-grow">
                             <div class="orgchart-badge medium" data-id="{!mgr.Id}" onclick="{!c.selectNode}"  style="{!'background-image: url('+mgr.SmallPhotoUrl+')'}"></div>
@@ -48,7 +50,7 @@
         </aura:renderIf>
         <!-- FLAT LIST OF REPORTS -->
         <aura:renderIf isTrue="{!and(v.flat,v.listReports.length>0)}">
-            <div class="slds-scrollable--y" > 
+            <div class="slds-scrollable--y" >
                 <lightning:buttonIcon iconName="utility:up" variant="bare" size="large" alternativeText="back" onclick="{!c.toggleFlatList}"/>
                 <ul class="slds-list--vertical slds-has-dividers">
                     <aura:iteration items="{!v.listReports}" var="report">
@@ -97,7 +99,7 @@
                                     <aura:renderIf isTrue="{!v.currentUser.Email!=null}">
                                         <a href="{!'mailto:' + v.currentUser.Email}">
                                             <lightning:icon iconName="utility:email" size="medium"/>
-                                        </a>     
+                                        </a>
                                     </aura:renderIf>
                                 </div>
                             </lightning:layoutItem>
@@ -107,11 +109,11 @@
                                 </a>
                             </lightning:layoutItem>
                             <lightning:layoutItem class="actionIcons">
-                                <div>    
+                                <div>
                                     <aura:renderIf isTrue="{!v.currentUser.Phone!=null}">
                                         <a href="{!'tel:' + v.currentUser.Phone}">
                                             <lightning:icon iconName="utility:call" size="medium"/>
-                                        </a>                   
+                                        </a>
                                     </aura:renderIf>
                                 </div>
                             </lightning:layoutItem>
@@ -127,12 +129,12 @@
                             <div class="orgchart-name slds">
                                 <p class="slds slds-text-heading--medium">{!v.currentUser.Name}</p>
                             </div>
-                            <div class="orgchart-userinfo">{!v.currentUser.Title}&nbsp;</div>           
+                            <div class="orgchart-userinfo">{!v.currentUser.Title}&nbsp;</div>
                         </a>
                     </lightning:layoutItem>
                     <lightning:layoutItem flexibility="grow">
                         <aura:renderIf isTrue="{!and(and(v.flat == false,v.listReports.length>0), v.search == false)}">
-                            <div class="bottom-container"> 
+                            <div class="bottom-container">
                                 <div class="listCircleReports slds-grid slds-grid--align-spread">
                                     <aura:iteration items="{!v.circleReports}" var="report">
                                         <div data-id="{!report.user.Id}" onclick="{!c.selectNode}" class="orgchart-badge small" style="{!'margin-top:'+report.top+'px;background-image: url('+report.user.SmallPhotoUrl+')'}"></div>
@@ -188,13 +190,13 @@
                                 </div>
                             </li>
                         </aura:iteration>
-                    </ul>    
+                    </ul>
                 </aura:renderIf>
             </lightning:layoutItem>
-        </aura:renderIf>         
+        </aura:renderIf>
     </lightning:layout>
-    <!-- ANIMATED LOADER --> 
+    <!-- ANIMATED LOADER -->
     <aura:renderIf isTrue="{! v.displayLoader}">
         <lightning:spinner variant="brand" size="medium"/>
-    </aura:renderIf>    
+    </aura:renderIf>
 </aura:component>
